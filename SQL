@@ -1,0 +1,130 @@
+/*
+--database
+   --schema
+     --tables
+	    --table schema
+
+create database database name;
+
+--database structure - schema 
+--tables, indexes, constraints..
+
+--navigate to different database - use databasename;
+
+--schema creation - create schema schema name;
+
+--types of schema
+--snowflake schema -- extension of star schema 
+--star schema --(fact(sales), dimensions(descriptive)) (product table, sales)
+--relational schema -- relations 
+
+--database schema design
+--er 
+--normalised 
+--custorname, custid,orderid,productid
+
+create table tablename ( col datatype, col2 datatype)
+
+create table employee(empid bigint, emp_name varchar(250), joiningdate date
+,salary decimal(10,0))
+
+*/
+
+create database ade;
+
+use ade;
+
+--schema
+create schema ade_schema;
+
+--table creation
+create table ade_schema.student(id bigint, name varchar(250));
+
+create table student(id int, name varchar(250)); -- dbo
+
+select * from ade.ade_schema.student
+
+use master;
+
+--drop database database;
+--drop schema schemaname;
+--drop table tablename;
+
+
+--table name - columns-datatypes-constrints
+
+--datatypes
+--integer datatype
+   --smallint, tinyint, bigint-8bytes, int-- 4bytes 
+
+--character datatypes 
+   --char(1)- 'a', char(5)  -- 'divya'
+   --varchar(5)- 'cat','divya'
+   --nvarchar(10) 
+   --text -- paragraphs 
+
+--decimal datatypes
+  --float -- 012.99
+  --decimal --0.10 (decimal(5,2) -- 5 - precision, scale - 2
+  --numeric -- numeric(5,2) 
+
+--date datatype
+   --date - '2025-02-19'
+   --datetime - '2025-02-19 00:01:00"
+   --timestamp
+---------------------------------------------------------------------
+
+use ade;
+
+select * from ade_schema.student
+
+--insert into ade_schema.student(id,name) values(1,'abc')
+--insert into ade_schema.student(id,name) values
+--(1,'abc'),
+--(2,'def'),
+--(3,'ghi')
+
+--insert into ade_schema.student(id) values(4)
+--insert into ade_schema.student(name,id) values('abc',5)
+
+select * from student
+
+insert into student select * from ade_schema.student;
+----------------------------------------------------------------------
+--update
+begin transaction
+update student set name = 'hemanth', id = 10  where id = 1 or name = 'hemanth'; -- needs to update
+save transaction s1
+delete student  -- truncate; -- needs to rollback
+save transaction s2
+
+
+rollback transaction s2
+
+--update tablename set col = 'values' where condition
+
+--truncate table student
+
+--drop vs delete vs truncate 
+--dimemp (empln ame, empid), fact table fact_salary ( empid,salary, bonus)
+
+---------------------------------------------------------------------------------------------------------
+--alter (to modify structure)
+select * from student
+
+alter table student 
+add age int; -- to add acolumn to the table structure
+
+alter table student
+drop column age; -- to drop a column from the table structure
+
+alter table student
+alter column id bigint; -- to alter datatype
+
+exec sp_rename 'student.id', 'new_id', 'column'; -- to modify column name
+
+exec sp_rename 'student', 'studentdetails' -- to modify table name
+
+exec sp_help 'studentdetails' -- to view schema 
+
+select * from INFORMATION_SCHEMA.columns ---imp
