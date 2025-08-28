@@ -1,0 +1,129 @@
+use ade;
+select * from ade_schema.student
+
+--constraints -- column level rules 
+--primary key , unique key, check, null key, not null, default, foriegn key
+
+--pk- unique + not null 
+--uk - allows one null + unique 
+--not null - allows duplicates but not nulls
+--check -- (age>18)
+--default -('def')
+
+
+drop table t1
+create table t1(id int primary key , 
+name varchar(50) unique, age int check(age>18), status varchar(50) default('absent'))
+
+insert into t1(id, name, age) values(1, 'abc',19)
+select * from t1
+
+
+---------------------------------------------------------------------------------------------------------
+--create, constrints, updates, deletes
+---------------------------------------------------------------------------------------------------------
+--dql
+
+select * from t1
+select id from t1
+
+--select -- selects columns  
+--* -- all columns 
+--from -- table name 
+
+--query -- group of clauses 
+--clause -- group by, distinct, having, orderby, join, top, limit...........
+--query writing order -- select - *,col--from --join--where--group by-having -- orderby -- select 
+
+use practicedb;
+select saleid,productid from ProductSales -- optimized
+select * from productsales -- 1m -20 
+
+--
+
+--where clause --filtering --some part of table , subset 
+/* where clause with single colum
+select * from productsales where {col = 'value'
+                                  col > value
+								  col < value
+								  col >= value
+								  col <= value
+								  } */
+--read records which are from north region 
+select * from ProductSales where region = 'north'
+select * from productsales where quantity > 3
+select * from productsales where quantity < 3
+select * from productsales where quantity >= 3
+select * from productsales where quantity <= 3
+
+--where with multiple columns 
+/*
+select * from productsales where col1 = value and col2 = value
+                                 col1 = value or col2 = value
+*/
+--fetch records having region = north and quantity > 3 
+
+select * from productsales where region = 'north' and quantity > 3 --or productname = 'laptop';
+select * from productsales where productname = 'laptop';
+-----------------------------------------------------------------------------------------------------------------
+/*
+between , in
+select * from productsales where col1 between value1 and value2 
+select * from productsales where col1 in (value1, value2)
+*/
+
+select * from ProductSales
+--fetch records where quantity between 3 and 10
+select * from productsales where quantity >= 3 and quantity <=10;
+select * from productsales where quantity between 3 and 10;
+
+--fetch records of productname in laptop or mobile 
+select * from productsales where productname in ('laptop','mobile')
+select * from productsales where productname = 'laptop' or productname = 'mobile'
+---------------------------------------------------------------------------------------------------------
+/*
+select * from product;
+filtering null values
+*/                             
+select * from product where unitprice is null; -- to find null values within column
+select * from product where unitprice is not null; -- to find non ull values within column
+---------------------------------------------------------------------------------------------------------
+--like operator(%)
+
+select * from ProductSales
+
+select * from ProductSales where productname like 'H%' -- starting value
+select * from productsales where productname like '%a%' -- middle value
+select * from productsales where productname like '%e' -- end value
+select * from productsales where productname like 'L%P'
+
+--wildcrad character(_)
+select * from productsales where productname like 'L___p'
+-----------------------------------------------------------------------------------------------------------
+--from -- addressess table 
+----------------------------------------------------------------------------------------------------------
+--group by
+/*
+aggregations -- sum, avg, min, max, count
+select sum(unitprice) as t_unitprice from productsales;
+derived column -- sum(unitprice)
+as - aliasing
+select avg(unitprice) as t_avg from productsales;
+select max(unitprice) as m_unitprice from productsales;
+select min(unitprice) as min_unitprice from productsales;
+select count(*) as count_records from productsales; -- table count 
+select count(1) as count from productsales;
+
+
+*/
+
+--fetch totalunitprice for each product(aggregation + foreach)
+
+select productname, sum(unitprice) as total_unitprice from productsales group by productname
+
+
+
+
+
+
+
