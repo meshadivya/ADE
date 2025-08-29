@@ -114,16 +114,57 @@ select min(unitprice) as min_unitprice from productsales;
 select count(*) as count_records from productsales; -- table count 
 select count(1) as count from productsales;
 
+usecase:
+to find aggregations on top of grouped data
+--to know number of duplicates
+--group by will have only unique records
 
+syntax:
+select grouping column(option), aggregation(col) from table group by grouping column;
+
+to find duplicates:
+select col1,col2,col3, count(*) from tablr group by col1,colk2,col3;
 */
 
 --fetch totalunitprice for each product(aggregation + foreach)
 
 select productname, sum(unitprice) as total_unitprice from productsales group by productname
+-----------------------------------------------------------------------------------------------------------
+
+select productid,productname from ProductSales
+--to find duplicates 
+select productid,productname,count(*) as t_count from productsales group by productid,productname;
+
+--distinct(gives unique records non-duplicates)
+
+select distinct productid,productname from ProductSales
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+--low cordinality column , high cordinality column
+----------------------------------------------------------------------------------------------------------------
+
+--having clause
+--to filter aggregated records
+-----------------------------------------------------------------------------------------------------------------
+select productid,productname,count(*) as t_count from productsales where saleid between 1 and 10 group by productid,productname having count(*) >=1;
+
+--execution order 
+--from --where--groupby-having
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+--order by clause
+--usecase - sorting 
+--select * from table order by col1 asc/desc
+--select * from table order by col1 asc/desc, col2 asc/desc, col3 asc/desc...
+
+select * from productsales order by saleid desc;
+select * from productsales order by saleid desc, ProductID asc;
+--from-order by-select 
 
 
+select productid,productname,count(*) as t_count from productsales where saleid between 1 and 10 group by productid,productname having count(*) >=1 order by count(*) desc, productname desc;
 
-
-
-
+--execution order
+--from-where-groupby-having-orderby-select 
+-----------------------------------------------------------------------------------------------------------------------
 
