@@ -1,0 +1,83 @@
+-- Customers table
+CREATE TABLE Customers (
+    customer_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    city VARCHAR(50),
+    country VARCHAR(50),
+    join_date DATE
+);
+
+-- Orders table
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    amount DECIMAL(10,2),
+    status VARCHAR(20), -- e.g., 'Completed', 'Pending', 'Cancelled'
+    category VARCHAR(30), -- e.g., 'Electronics', 'Clothing', 'Books'
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+);
+
+-- Insert Customers
+INSERT INTO Customers VALUES
+(1, 'Alice', 'Johnson', 'New York', 'USA', '2020-01-15'),
+(2, 'Bob', 'Smith', 'Los Angeles', 'USA', '2021-03-22'),
+(3, 'Charlie', 'Lee', 'Chicago', 'USA', '2019-07-09'),
+(4, 'Diana', 'Brown', 'London', 'UK', '2020-05-11'),
+(5, 'Ethan', 'Williams', 'Manchester', 'UK', '2021-08-30'),
+(6, 'Fiona', 'Taylor', 'Sydney', 'Australia', '2022-02-18'),
+(7, 'George', 'Martin', 'Melbourne', 'Australia', '2018-11-05'),
+(8, 'Hannah', 'Clark', 'Toronto', 'Canada', '2020-09-14'),
+(9, 'Ian', 'Walker', 'Vancouver', 'Canada', '2019-04-25'),
+(10,'Jane', 'Hall', 'Berlin', 'Germany', '2021-12-10');
+
+-- Insert Orders
+INSERT INTO Orders VALUES
+(101, 1, '2021-01-10', 250.00, 'Completed', 'Electronics'),
+(102, 1, '2021-03-15', 120.50, 'Completed', 'Books'),
+(103, 2, '2021-05-20', 75.00, 'Cancelled', 'Clothing'),
+(104, 2, '2022-02-10', 200.00, 'Completed', 'Electronics'),
+(105, 3, '2020-09-12', 350.00, 'Completed', 'Furniture'),
+(106, 3, '2021-11-30', 90.00, 'Pending', 'Books'),
+(107, 4, '2021-07-18', 500.00, 'Completed', 'Electronics'),
+(108, 4, '2022-01-25', 80.00, 'Completed', 'Clothing'),
+(109, 5, '2022-03-05', 60.00, 'Cancelled', 'Books'),
+(110, 5, '2022-05-14', 300.00, 'Completed', 'Furniture'),
+(111, 6, '2022-06-10', 450.00, 'Completed', 'Electronics'),
+(112, 7, '2020-08-25', 150.00, 'Completed', 'Books'),
+(113, 7, '2021-04-19', 500.00, 'Cancelled', 'Furniture'),
+(114, 8, '2021-09-09', 220.00, 'Completed', 'Clothing'),
+(115, 8, '2022-02-28', 130.00, 'Completed', 'Books'),
+(116, 9, '2019-06-15', 310.00, 'Completed', 'Electronics'),
+(117, 9, '2020-11-20', 250.00, 'Completed', 'Furniture'),
+(118, 10,'2022-01-12', 400.00, 'Completed', 'Electronics'),
+(119, 10,'2022-03-22', 180.00, 'Pending', 'Clothing'),
+(120, 1, '2022-06-05', 90.00, 'Completed', 'Books');
+
+
+1. Find the total amount spent by customers in each country, but only include countries where total sales exceed $500.
+
+2. Show the number of orders per category per country.
+
+3. List all customers who placed orders in more than one category.
+
+4. Find the average order amount per category, but exclude categories where the average is below $200.
+
+5. Show all customers and classify them as:
+
+"High Spender" if total purchases > $800
+
+"Medium Spender" if between $400–$800
+
+"Low Spender" otherwise
+
+6. Find categories that were sold in the USA but not in the UK (use EXCEPT).
+
+7. For each year, find the top category by total sales amount.
+
+8. Find the city with the highest number of Completed orders.
+
+9. Show the order status distribution (Completed, Pending, Cancelled) per country.
+
+10. List customers who never placed a Cancelled order.
