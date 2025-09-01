@@ -162,9 +162,65 @@ select * from productsales order by saleid desc, ProductID asc;
 --from-order by-select 
 
 
-select productid,productname,count(*) as t_count from productsales where saleid between 1 and 10 group by productid,productname having count(*) >=1 order by count(*) desc, productname desc;
+select top 2 productid,productname,count(*) as t_count from productsales where saleid between 1 and 10 group by productid,productname having count(*) >=1 order by count(*) desc, productname desc;
 
 --execution order
 --from-where-groupby-having-orderby-select 
 -----------------------------------------------------------------------------------------------------------------------
+
+--to list top 10 rows 
+--top 
+select top 10 * from productsales order by totalamount desc 
+--limit/offset fetchnext
+select * from productsales order by totalamount desc offset 5 rows fetch next 5 rows only; 
+--------------------------------------------------------------------------------------------------------------------------
+--derived columns 
+--derives from original columns
+
+select *,(0.5 * totalamount) as discountamount from productsales
+
+--iif, case when 
+--conditional derived columns
+--iif-- iff(expression, true condition, false condition)-- if--else
+select *, iif(productname = 'Laptop', (0.5 * totalamount),(0.4*totalamount)) as discountamount from productsales
+
+--case when --if-elif-ladder
+
+select *, case 
+when productname = 'laptop' and region = 'North' then (0.5 * totalamount) 
+when productname = 'tablet' then (0.4 * totalamount)
+else 0
+end as distountamount
+from productsales
+
+---find sum(totalamount) for product laptop
+select productname, sum(case when productname = 'laptop' then (0.5 * totalamount) else totalamount end) as t_amount from productsales group by productname 
+
+--group by - case when
+select * from productsales;
+select case when productname in('laptop', 'tablet') then 'valid' else 'invalid' end as newcol, count(*) as count from productsales
+group by case when productname in('laptop', 'tablet') then 'valid' else 'invalid' end
+-----------------------------------------------------------------------------------------------------------------------------------
+--joins -- to combine two or more tables
+--types - left, right, inner, full outer join, cross join
+--common column
+--inner - fetch matched records from both tables
+--left - fetches all records from left table and matched records from right table 
+--right- fetches all records from right table table and matched records from left table
+--full- inner+left+right
+--cross - product of number of records from left table and right table 
+
+--syntax
+--select * from table1 {join} table 2 on table1.col = table2.col
+
+select * from t2
+select * from t3
+
+select t3.col1, t2.* from t3 left join t2 on t2.col2 = t3.col2 
+
+insert into t2(col1) values (3)
+
+
+
+
 
