@@ -26,6 +26,75 @@ select * from t1
 
 select * from t1
 select id from t1
+----------------------------------------------------------------------------------------------------------
+--merge -insert, update, delete
+--scd ( slowly changing dimensions)
+--t1(source) - t2(target)
+--(id,name) - t2(id,name)
+--(1,'abc') - (1,abc) --current 
+--(1,'def')-- -  (1,def)  --name change
+
+
+--scd type 1: overwrites previous records 
+--replaces previous value with current value
+--drawback -- doesnt preserve history 
+
+--scd type 2: preserves historical data by adding a new row
+--(1,'abc') - (1,abc, flag- true(current))-(historical), expire date)
+--condition - if source.id in target.id 
+--new row insertion - (1,def, true)
+--update - provious flag value to false
+
+--scd type 3: preserves hostory by adding a column
+--t1(source) - t2(target)
+--(id,name) - t2(id,name)
+--(1,'abc') - (1,abc) 
+
+--(id,name, new_name)
+--(1,abc,'def')
+--only two 
+
+select * from ProductSales
+delete from dim_products where productid = 101
+select productid, region from productsales where saleid = 4
+select * from dim_products
+CREATE TABLE dim_products ( --target table
+    productid INT,
+    region VARCHAR(50),
+    effective_date DATE,
+    expiry_date DATE,
+    is_current CHAR(1) --flag
+);
+
+--scd type 1
+MERGE dim_products AS target
+USING (SELECT DISTINCT productid,region FROM productsales where saleid = 4 ) AS source
+    ON target.productid = source.productid -- common column 
+WHEN MATCHED AND target.region <> source.region  THEN 
+    UPDATE SET target.region = source.region
+WHEN NOT MATCHED  THEN
+    INSERT (productid, region, effective_date, expiry_date, is_current)
+    VALUES (source.productid, source.region, GETDATE(), NULL, 'Y');
+
+	--scd type2
+MERGE dim_products AS target
+USING (SELECT DISTINCT productid, region FROM productsales where saleid =11  ) AS source
+    ON target.productid = source.productid
+   AND target.is_current = 'Y'
+WHEN MATCHED AND target.region <> source.region THEN
+    UPDATE SET target.expiry_date = GETDATE(),
+               target.is_current = 'N'
+WHEN NOT MATCHED BY target THEN
+    INSERT (productid, region, effective_date, expiry_date, is_current)
+    VALUES (source.productid, source.region, GETDATE(), NULL, 'Y');
+
+select * from dim_products
+select * from productsales 
+
+
+
+
+
 
 --select -- selects columns  
 --* -- all columns 
@@ -219,6 +288,78 @@ select * from t3
 select t3.col1, t2.* from t3 left join t2 on t2.col2 = t3.col2 
 
 insert into t2(col1) values (3)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Merge
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--merge -insert, update, delete
+--scd ( slowly changing dimensions)
+--t1(source) - t2(target)
+--(id,name) - t2(id,name)
+--(1,'abc') - (1,abc) --current 
+--(1,'def')-- -  (1,def)  --name change
+
+--scd type 1: overwrites previous records 
+--replaces previous value with current value
+--drawback -- doesnt preserve history 
+
+--scd type 2: preserves historical data by adding a new row
+--(1,'abc') - (1,abc, flag- true(current))-(historical), expire date)
+--condition - if source.id in target.id 
+--new row insertion - (1,def, true)
+--update - provious flag value to false
+
+--scd type 3: preserves hostory by adding a column
+--t1(source) - t2(target)
+--(id,name) - t2(id,name)
+--(1,'abc') - (1,abc) 
+
+--(id,name, new_name)
+--(1,abc,'def')
+--only two 
+
+select * from ProductSales
+delete from dim_products where productid = 101
+select productid, region from productsales where saleid = 4
+select * from dim_products
+CREATE TABLE dim_products ( --target table
+    productid INT,
+    region VARCHAR(50),
+    effective_date DATE,
+    expiry_date DATE,
+    is_current CHAR(1) --flag
+);
+
+--scd type 1
+MERGE dim_products AS target
+USING (SELECT DISTINCT productid,region FROM productsales where saleid = 4 ) AS source
+    ON target.productid = source.productid -- common column 
+WHEN MATCHED AND target.region <> source.region  THEN 
+    UPDATE SET target.region = source.region
+WHEN NOT MATCHED  THEN
+    INSERT (productid, region, effective_date, expiry_date, is_current)
+    VALUES (source.productid, source.region, GETDATE(), NULL, 'Y');
+
+	--scd type2
+MERGE dim_products AS target
+USING (SELECT DISTINCT productid, region FROM productsales where saleid =11  ) AS source
+    ON target.productid = source.productid
+   AND target.is_current = 'Y'
+WHEN MATCHED AND target.region <> source.region THEN
+    UPDATE SET target.expiry_date = GETDATE(),
+               target.is_current = 'N'
+WHEN NOT MATCHED BY target THEN
+    INSERT (productid, region, effective_date, expiry_date, is_current)
+    VALUES (source.productid, source.region, GETDATE(), NULL, 'Y');
+
+select * from dim_products
+select * from productsales 
+
+
+
+
+
+
 
 
 
