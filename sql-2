@@ -354,6 +354,48 @@ WHEN NOT MATCHED BY target THEN
 
 select * from dim_products
 select * from productsales 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+date functions
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+--date functions
+----------------------------------------------------------------------------------------
+select * from productsales;
+--to get current date
+select getdate()
+--year(saledate)-- extracts year from date, month(saledate) - extracts month, day(saledate) - extracts date
+select saledate,year(saledate) as year, month(saledate) as month, day(saledate) as day from ProductSales
+
+--dateadd- preavious or future date travelling
+select saledate,dateadd(month,-1, saledate) as previous_month from productsales
+select saledate,dateadd(day,-720, saledate) as previous_month from productsales
+select saledate,dateadd(year,-1, saledate) as previous_month from productsales
+
+--datediff -- two get date difference
+select saledate, datediff(year, saledate, getdate()) from productsales
+
+--emonth -- to get last day of month
+select EOMONTH('2025-02-14') as last_day_of_month from productsales
+
+--datepart
+select getdate(), datepart(year, getdate()) as year,
+datepart(month,getdate()) as month, 
+datepart(day,getdate()) as day,
+datepart(quarter,getdate()) as quarter,
+datepart(hour, getdate()) as hour,
+datepart(minute,getdate()) as min,
+datepart(second,getdate()) as seconds
+
+select DATEFROMPARTS(2021,11,20)
+
+SELECT CONVERT(DATETIME, '2025-09-04', 23) AS ConvertedDate;
+SELECT CONVERT(DATETIME, '09/04/2025', 101) AS USDate;
+SELECT CONVERT(DATETIME, '04/09/2025', 103) AS UKDate;
+
+--datename
+select datename(day,'2025-09-01') --- 4 - thursday
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
