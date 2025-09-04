@@ -1,0 +1,31 @@
+Here are some date-based SQL practice questions for this table:
+
+Find employees who have taken more than 15 days of leave in the current year.
+
+Get employees who applied for leave but were absent (attendance table has no check-in) for the same period.
+
+Find employees who have taken consecutive leaves longer than 7 days.
+
+Calculate the average leave days per employee for each leave type.
+
+Find employees who applied for leave but had overlapping attendance records (possible fraud).
+
+Get the longest leave duration per employee.
+
+Find employees who have taken leave in the last 30 days but still worked on weekends.
+
+Identify employees who applied for leave more than 3 times in a single month.
+
+Show employees who had leave approved by more than one manager.
+
+List employees who applied for leave in the same week as their DateOfJoining anniversary.
+
+Find employees who took leave exactly on their birthday.
+
+Calculate the leave utilization rate = (total leave days / total possible working days).
+
+Identify employees who took leave overlapping with public holidays (you can simulate a Holiday table).
+
+Get the employee who had the earliest leave start date and the latest leave end date overall.
+
+Show employees who have never taken Sick Leave.
