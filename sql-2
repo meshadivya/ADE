@@ -397,6 +397,112 @@ select datename(day,'2025-09-01') --- 4 - thursday
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+--view - create view vw_1 as (query)
+--subquery - query inside
+--cte - with ctename as (query)
+
+--temptables 
+--local temptable(#),global temptable(##)
+--select * into global_temp_table from productsales
+
+--select * from global_temp_table
+
+--window functions
+--ranking function - rank, row number, dense rank
+--aggregation with over clause
+--lead,lag
+
+--select totalamount, row_number() over(order by totalamount desc) as rank from productsales
+--duplicates
+select distinct totalamount from productsales -- unique records 
+
+--duplicated rows count
+select totalamount, count(*) from productsales group by totalamount
+
+--to fetch duplicated records
+select totalamount, row_number() over(partition by totalamount order by totalamount desc) as rank1 from productsales;
+
+with mycte as (
+select *, row_number() over(partition by totalamount order by totalamount desc) as rank1 from #produt_temp_table
+)
+delete from mycte where rank1 > 1
+
+select * from #produt_temp_table
+
+
+--rank
+select *, rank() over( partition by region order by totalamount desc) as rank1 from productsales;
+
+--dense_rank()
+select *, dense_rank() over( partition by region order by totalamount desc) as rank1 from productsales;
+--note: orderby is mandatory
+----------------------------------------------------------------------------------------------------------------------------------------------
+--fetch top highest revenued product
+
+--step_1- select *, dense_rank() over(order by totalamount desc) as highest_revenue_rank from productsales
+--with highest_revenued_product as (
+select *, dense_rank() over(order by totalamount desc) as highest_revenue_rank from productsales)
+select * from highest_revenued_product where highest_revenue_rank in(1,2,3)
+
+--fetch top highest revenued product for each region
+with highest_revenued_product as (
+select *, dense_rank() over(partition by region order by totalamount desc) as highest_revenue_rank from productsales)
+select * from highest_revenued_product where highest_revenue_rank in(1)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Find the 2nd highest transaction per user without using LIMIT or TOP
+--userid,transactionAmount
+--with mycte as (select *, dense_rank() over(partition by userid order transactAmaount desc) as rank from trnsactiontable)
+--select * from mycte where rank = 2
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+--aggregations with over clause
+select * from productsales
+
+select sum(totalamount) from productsales
+select productname, sum(totalamount) from productsales group by productname
+----------------------------------------------------------------------------------------------------------------------------------------------------
+select *, sum(totalamount) over() as total_sum from productsales
+select *, sum(totalamount) over(partition by productname) from productsales
+-------------------------------------------------------------------------------------------------------------------------------------------------
+--rolling sum/cumulative sum (sum() with over(order by)
+------------------------------------------------------------------------------------------------------------------------------------------------
+select *, sum(totalamount) over(partition by productname order by totalamount desc) as cumsum from productsales
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Sample table:
+CREATE TABLE ProductSales (
+    ProductID INT,
+    ProductName VARCHAR(100),
+    SaleDate DATE,
+    Quantity INT,
+    UnitPrice DECIMAL(10,2),
+    TotalAmount AS (Quantity * UnitPrice) PERSISTED, -- computed column
+    CustomerID INT
+);
+
+INSERT INTO ProductSales (ProductID, ProductName, SaleDate, Quantity, UnitPrice, CustomerID)
+VALUES
+(1, 'Laptop',       '2024-01-05', 2, 800.00, 101),
+(2, 'Smartphone',   '2024-01-06', 1, 600.00, 102),
+(3, 'Tablet',       '2024-01-07', 3, 300.00, 103),
+(4, 'Headphones',   '2024-01-08', 5, 50.00, 104),
+(5, 'Monitor',      '2024-01-09', 2, 200.00, 105),
+(6, 'Keyboard',     '2024-01-10', 4, 40.00, 106),
+(7, 'Mouse',        '2024-01-11', 6, 25.00, 107),
+(8, 'Printer',      '2024-01-12', 1, 150.00, 108),
+(9, 'Camera',       '2024-01-13', 2, 500.00, 109),
+(10,'Speaker',      '2024-01-14', 3, 75.00, 110),
+(11,'Smartwatch',   '2024-01-15', 2, 250.00, 111),
+(12,'External HDD', '2024-01-16', 4, 120.00, 112),
+(13,'Router',       '2024-01-17', 2, 90.00, 113),
+(14,'Projector',    '2024-01-18', 1, 450.00, 114),
+(15,'Webcam',       '2024-01-19', 5, 60.00, 115),
+(16,'Microphone',   '2024-01-20', 2, 110.00, 116),
+(17,'Drone',        '2024-01-21', 1, 900.00, 117),
+(18,'Game Console', '2024-01-22', 2, 500.00, 118),
+(19,'Charger',      '2024-01-23', 6, 30.00, 119),
+(20,'TV',           '2024-01-24', 1, 1200.00, 120);
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
