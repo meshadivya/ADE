@@ -504,6 +504,54 @@ VALUES
 (20,'TV',           '2024-01-24', 1, 1200.00, 120);
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+use practicedb
+select * from productsales;
+--moving average 
+select quantity, avg(quantity) over(order by quantity desc rows between 1 preceding and current row)
+movingAverage from productsales;
+----------------------------------------------------------------------------------------------------------------------
+--lead , --lag
+with mycte as (
+select quantity, lead(quantity,1,0) over(order by productid) as next_row from productsales)
+select *, abs(quantity - next_row) as difference from mycte
+select region, lag(region,2,0) over(order by productid) as next_row from productsales;
+----------------------------------------------------------------------------------------------------------------------
+--inbuilt functions
+--abs, round 
+--substring, upper, lower, trim 
+--string functions
+select * from ProductSales;
+select productname, UPPER(PRODUCTNAME) AS CAP, LOWER(PRODUCTNAME) AS LOWERCASE FROM PRODUCTSALES;
+SELECT PRODUCTNAME, SUBSTRING(PRODUCTNAME,2,4) AS SUBSTRING FROM PRODUCTSALES;
+select productname , ltrim(productname) as removed_spaces from productsales;--removes only left spaces
+select productname , rtrim(productname) as removed_spaces from productsales;--removes only right trailing  spaces
+select productname, concat(productname, 'abc') as new_product from productsales
+select productname, concat_ws('-',productname, 'abc') as new_product from productsales
+select productname, len(productname) as len from productsales
+----------------------------------------------------------------------------------------------------------------------
+--employee (dep, employeeid, salary)
+--fetch 2 highest salaried employee whose salery >  depts average salary
+/*with mycte as (
+select *, avg(salary) over(partition by dept) as dep_avg from table),
+mycte2 as (select *, dense_rank() over(order by salary desc) as rank from mycte where salary > dep_avg)
+select * from mycte2 where rank = 2;*/
+
+/*
+sum() over(order by) -- cumulative sum/ rolling sum
+avg() over(order by) -- moving average
+*/
+
+--employee (dep, employeeid, salary)
+--fetch 2 highest salaried employee whose salery >  depts average salary using group by
+/*
+with mycte as (select dept, avg(salary) as avgsal from table group by dept),
+mycte2 as(select * from mycte join table on mycte.dept = table.dept where salary > avgsal),
+mycte3 as (select *, dense_rank() over(order by salary desc) as rank from mycte2)
+select * from mycte3 where rank = 2;
+*/
+
+
+
 
 
 
