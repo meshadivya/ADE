@@ -549,6 +549,90 @@ mycte2 as(select * from mycte join table on mycte.dept = table.dept where salary
 mycte3 as (select *, dense_rank() over(order by salary desc) as rank from mycte2)
 select * from mycte3 where rank = 2;
 */
+-------------------------------------------------------------------------------------------------------------------------
+
+--batch statements
+--begin statements end
+-------------------------------------------------------------------------------------------------------------------------
+--creating variables in sql
+--two numbers addition
+begin
+declare @var1 int
+declare @var2 int
+declare @var3 int
+
+set @var1 = 10;
+set @var2 = 20;
+set @var3 = @var1 + @var2;
+select @var3 as additon;
+end;
+go
+
+--if else
+begin
+declare @var1 int = 10;
+declare @var2 int = 20;
+declare @var3 int;
+begin
+IF
+(@VAR1 = 10)
+ SET @VAR3 = @var1 + @var2;
+
+else
+begin
+ set @var3 = @var2;
+end
+end
+
+select @var3;
+end
+
+--stored procedures
+--set of queries
+alter procedure sp_example as
+begin
+select * from productsales;
+select * from productsales where saleid = 4;
+declare @var1 int = 10;
+declare @var2 int = 20;
+declare @var3 int;
+IF
+(@VAR1 = 10)
+ SET @VAR3 = @var1 + @var2;
+else
+ set @var3 = @var2;
+select @var3 as addition;
+end
+
+exec sp_example
+
+create procedure sp_example1(@value int) as
+begin
+select * from productsales where saleid = @value;
+end
+
+exec sp_example1 3
+
+drop procedure sp_example1;
+-------------------------------------------------------------------------------------------------------------------------
+--transactions
+--commit, roolback,savepoint
+select * from productsales
+
+begin transaction
+update productsales set productname = 'Mobile' where productid = (select productid from productsales where productname = 'laptop');
+save transaction s1
+delete productsales where productid  = 101; --rollback
+rollback transaction s1
+commit
+
+----------------------------------------------------------------------------------------------------------------------
+declare @custid int = 10
+IF not exists (select * from productsales where saleid = 30)
+insert into productsales([CustomerID],[ProductID],[ProductName],[Quantity],[Region],[SaleDate]...) values(@custid,)
+
+
+
 
 
 
