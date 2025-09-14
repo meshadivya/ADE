@@ -1,0 +1,99 @@
+🔵One of the SQL Question Asked in Visa Interview🔵
+
+💡𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧: "Retrieve all cardholders who have made transactions with the total amount over $200 in their own country's stores in July 2022."
+
+📂 Table Schema:
+-- Cardholder Table
+CREATE TABLE cardholder (
+ cardholder_id INT PRIMARY KEY,
+ name VARCHAR(100),
+ country VARCHAR(50)
+);
+
+-- Merchant Table 
+CREATE TABLE merchant (
+ merchant_id VARCHAR(10) PRIMARY KEY,
+ name VARCHAR(100),
+ city VARCHAR(50),
+ country VARCHAR(50)
+);
+
+-- Transaction Table
+CREATE TABLE transaction_details (
+ transaction_id VARCHAR(10) PRIMARY KEY,
+ amount DECIMAL(10, 2),
+ transaction_date DATETIME,
+ card_id INT,
+ merchant_id VARCHAR(10),
+ FOREIGN KEY (card_id) REFERENCES cardholder(cardholder_id),
+ FOREIGN KEY (merchant_id) REFERENCES merchant(merchant_id)
+);
+
+📊 Sample Data:
+-- Cardholder Data
+INSERT INTO cardholder VALUES
+(101, 'John Doe', 'USA'),
+(202, 'Alice Johnson', 'USA'),
+
+-- Merchant Data
+INSERT INTO merchant VALUES
+('M001', 'Best Buy', 'New York', 'USA'),
+('M002', 'Apple Store', 'San Francisco', 'USA'),
+
+
+-- Transaction Data
+INSERT INTO transaction_details VALUES
+('T001', 350, '2022-06-08 00:00:00', 101, 'M001'),
+('T002', 200, '2022-06-10 00:00:00', 101, 'M002'),
+('T004', 600, '2022-07-26 00:00:00', 303, 'M001'),
+('T005', 400, '2022-07-05 00:00:00', 101, 'M001');
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+🔵One of the SQL Question Asked in Flipkart Interview🔵
+💡𝐐𝐮𝐞𝐬𝐭𝐢𝐨𝐧: "Write an SQL query to find the number of payments made in the first five months (January to May) of 2021, considering only even OrderIDs. Group the results by month, and return only those months where the sum of Total Order Amount exceeds 200,000. Sort the results by month."
+
+📂 Table Schema:
+CREATE TABLE orders_data (
+ OrderID INT PRIMARY KEY,
+ CustomerID INT,
+ PaymentID INT,
+ OrderDate DATE,
+ ShipperID INT,
+ ShipDate DATE,
+ DeliveryDate DATE,
+ Total_order_amount DECIMAL(10,2)
+);
+
+📊 Sample Data:
+INSERT INTO orders_data VALUES
+(765622, 55713, 742, '2021-01-12', 101, '2021-01-13', '2021-01-15', 25112),
+(765628, 57145, 743, '2021-02-06', 102, '2021-02-07', '2021-02-09', 13293),
+(765635, 57089, 744, '2021-03-15', 103, '2021-03-16', '2021-03-18', 20100);
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Construct a query to determine the salary difference between the highest salaries in the 'marketing' and 'engineering' departments. Use a CTE to first find the maximum salary per department, then compute the difference between these maxima.
+
+Table Schema:
+Table: db_employee:
+id (bigint): Unique employee identifier.
+department_id (bigint): Foreign key referencing db_dept.id.
+salary (bigint): Employee salary.
+
+Table: db_dept:
+id (bigint): Unique department identifier.
+department (text): Department name (e.g., 'marketing', 'engineering').
+Sample Test Case:
+
+Consider the following data:
+
+INSERT INTO db_dept (id, department)
+VALUES
+ (101, 'marketing'),
+ (102, 'engineering'),
+ (103, 'sales');
+
+INSERT INTO db_employee (id, department_id, salary)
+VALUES
+ (1, 101, 80000),
+ (2, 102, 90000),
+ (3, 103, 70000);
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
